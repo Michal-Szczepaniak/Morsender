@@ -1,0 +1,57 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/icon-notifications.svg</file>
+        <file>images/icon-notifications-muted.svg</file>
+
+        <file>images/protocols/16/aim.png</file>
+        <file>images/protocols/16/bonjour.png</file>
+        <file>images/protocols/16/facebook.png</file>
+        <file>images/protocols/16/gadu-gadu.png</file>
+        <file>images/protocols/16/icq.png</file>
+        <file>images/protocols/16/irc.png</file>
+        <file>images/protocols/16/jabber.png</file>
+        <file>images/protocols/16/meanwhile.png</file>
+        <file>images/protocols/16/novell.png</file>
+        <file>images/protocols/16/silc.png</file>
+        <file>images/protocols/16/simple.png</file>
+        <file>images/protocols/16/zephyr.png</file>
+
+        <file>images/protocols/22/aim.png</file>
+        <file>images/protocols/22/bonjour.png</file>
+        <file>images/protocols/22/facebook.png</file>
+        <file>images/protocols/22/gadu-gadu.png</file>
+        <file>images/protocols/22/icq.png</file>
+        <file>images/protocols/22/irc.png</file>
+        <file>images/protocols/22/jabber.png</file>
+        <file>images/protocols/22/meanwhile.png</file>
+        <file>images/protocols/22/novell.png</file>
+        <file>images/protocols/22/silc.png</file>
+        <file>images/protocols/22/simple.png</file>
+        <file>images/protocols/22/zephyr.png</file>
+
+        <file>images/protocols/48/aim.png</file>
+        <file>images/protocols/48/bonjour.png</file>
+        <file>images/protocols/48/facebook.png</file>
+        <file>images/protocols/48/gadu-gadu.png</file>
+        <file>images/protocols/48/icq.png</file>
+        <file>images/protocols/48/irc.png</file>
+        <file>images/protocols/48/jabber.png</file>
+        <file>images/protocols/48/meanwhile.png</file>
+        <file>images/protocols/48/novell.png</file>
+        <file>images/protocols/48/silc.png</file>
+        <file>images/protocols/48/simple.png</file>
+        <file>images/protocols/48/zephyr.png</file>
+
+        <file>images/protocols/scalable/aim.svg</file>
+        <file>images/protocols/scalable/bonjour.svg</file>
+        <file>images/protocols/scalable/gadu-gadu.svg</file>
+        <file>images/protocols/scalable/icq.svg</file>
+        <file>images/protocols/scalable/irc.svg</file>
+        <file>images/protocols/scalable/jabber.svg</file>
+        <file>images/protocols/scalable/meanwhile.svg</file>
+        <file>images/protocols/scalable/novell.svg</file>
+        <file>images/protocols/scalable/silc.svg</file>
+        <file>images/protocols/scalable/simple.svg</file>
+        <file>images/protocols/scalable/zephyr.svg</file>
+    </qresource>
+</RCC>
