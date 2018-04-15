@@ -78,7 +78,7 @@ AccountsOptionsModel* AccountsModel::newAccount(int index) {
 
     if(i == index) {
         AccountsOptionsModel *option = new AccountsOptionsModel();
-        option->addOptions(account);
+        option->addOptions(account, true);
         option->protocolID = index;
         return option;
     } else {
@@ -100,8 +100,10 @@ void AccountsModel::addAccount(AccountsOptionsModel *account, int newAccount)
     m_options << account;
     endInsertRows();
 
-    if(newAccount)
+    if(newAccount) {
         purple_accounts_add(account->account);
+        purple_account_set_enabled(account->account, UI_ID, true);
+    }
 }
 
 QStringList AccountsModel::getPluginList() {
@@ -276,7 +278,7 @@ void AccountsModel::accountStatusChangedCb(PurpleAccount *account,
 }
 
 void AccountsModel::accountStatusChanged(PurpleAccount *account, void *data) {
-    AccountsOptionsModel* foundOption;
+    AccountsOptionsModel* foundOption = NULL;
     for(AccountsOptionsModel* option: m_options) {
         if(account == option->account) {
             foundOption = option;

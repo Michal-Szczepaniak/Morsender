@@ -33,7 +33,7 @@ void AccountsOptionsModel::addOption(const Option &option)
     endInsertRows();
 }
 
-void AccountsOptionsModel::addOptions(PurpleAccount* account) {
+void AccountsOptionsModel::addOptions(PurpleAccount* account, bool newAccount) {
         this->account = account;
         username = QString::fromStdString(std::string(purple_account_get_username(account)));
         protocol = QString::fromStdString(std::string(purple_account_get_protocol_id(account)));
@@ -58,13 +58,15 @@ void AccountsOptionsModel::addOptions(PurpleAccount* account) {
             accountOption.value = enabled ? "1" : "0";
             accountOption.type = "bool";
             accountOption.setting = "enable";
+            if(newAccount)
+                accountOption.disabled = true;
             Option usernameOption;
             usernameOption.name = "Username";
             usernameOption.defaultValue = "sailor";
             usernameOption.value = QString::fromUtf8(purple_account_get_username(account));
             usernameOption.type = "string";
             usernameOption.setting = "username";
-            usernameOption.disabled = enabled ? true : false;
+            usernameOption.disabled = enabled;
             Option passwordOption;
             passwordOption.name = "Password";
             passwordOption.defaultValue = "";

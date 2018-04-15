@@ -81,6 +81,8 @@ Page {
                 var name = chatModel.chatName
 //                console.log(chatModel.chatName)
                 chatModel.chatName = ""
+                if(buddyModel.rowCount() == 0)
+                    pageStack.push(Qt.resolvedUrl("AccountsList.qml"))
             }
         }
     }

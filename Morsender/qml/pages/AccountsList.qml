@@ -28,6 +28,16 @@ Page {
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.All
 
+    Label {
+        id: emptyText
+        anchors.fill: parent
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        text: "There is no account configured. \nTo start with Morsender configure account first from pull down menu."
+        wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+        visible: !accountsModel.rowCount()
+    }
+
     // To enable PullDownMenu, place our content in a SilicaFlickable
     SilicaFlickable {
         anchors.fill: parent
@@ -69,10 +79,10 @@ Page {
                     color: delegate.highlighted ? Theme.highlightColor : Theme.primaryColor
                 }
                 onClicked: {
+                    plugins.currentIndex = protocolID
                     accountPage.option = options
                     accountPage.newAccount = false
-                    accountPage.protocolID = protocolID
-                    pageStack.push(accountPage, {protocolID: protocolID})
+                    pageStack.push(accountPage)
                 }
 
                 Component {
@@ -97,7 +107,6 @@ Page {
         acceptDestinationAction: PageStackAction.Pop
         property var option: null
         property bool newAccount: false
-        property int protocolID: 0
 
         PageHeader {
             id: header
@@ -110,7 +119,6 @@ Page {
             width: page.width
             label: "Account Type"
             anchors.top: header.bottom
-            currentIndex: accountPage.protocolID
             enabled: !accountPage.option.getEnabled()
             menu: ContextMenu {
                 Repeater {
@@ -147,7 +155,7 @@ Page {
                         text: optionValue
                         width: parent.width
                         readOnly: optionDisabled
-                        visible: optionType == "string" ? true : false
+                        visible: optionType === "string"
                         EnterKey.onClicked: optionValue = stringValue.text
                         onFocusChanged: optionValue = stringValue.text
                     }
@@ -156,7 +164,8 @@ Page {
                         id: passwordValue
                         text: optionValue
                         width: parent.width
-                        visible: optionType == "password" ? true : false
+                        readOnly: optionDisabled
+                        visible: optionType === "password"
                         EnterKey.onClicked: optionValue = passwordValue.text
                         onFocusChanged: optionValue = passwordValue.text
                     }
@@ -164,26 +173,29 @@ Page {
                     TextField {
                         id: intValue
                         text: optionValue
+                        readOnly: optionDisabled
                         inputMethodHints: Qt.ImhFormattedNumbersOnly
                         width: parent.width
-                        visible: optionType == "int" ? true : false
+                        visible: optionType === "int"
                         EnterKey.onClicked: optionValue = intValue.text
                         onFocusChanged: optionValue = intValue.text
                     }
 
                     TextSwitch {
                         id: boolValue
-                        checked: optionValue == "1" ? true : false
-                        visible: optionType == "bool" ? true : false
+                        checked: optionValue === "1"
+                        visible: optionType === "bool"
                         width: parent.width
+                        enabled: !optionDisabled
                         onClicked: optionValue = boolValue.checked
                     }
 
                     ComboBox {
                         id: stringListValue
                         width: page.width
-                        visible: optionType === "stringList" ? true : false
-                        currentIndex: optionIndex
+                        visible: optionType === "stringList"
+                        currentIndex: optionType === "stringList" ? optionIndex : -1
+                        enabled: !optionDisabled
                         menu: ContextMenu {
                             Repeater {
                                 model: optionListValue

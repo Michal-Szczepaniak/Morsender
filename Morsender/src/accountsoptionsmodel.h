@@ -58,7 +58,7 @@ public:
     bool    enabled;
 
     void addOption(const Option &option);
-    void addOptions(PurpleAccount* account);
+    void addOptions(PurpleAccount* account, bool newAccount = false);
     Q_INVOKABLE bool getEnabled();
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;

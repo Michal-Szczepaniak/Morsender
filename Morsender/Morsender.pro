@@ -45,9 +45,6 @@ HEADERS += \
 
 OTHER_FILES += qml/Morsender.qml \
     qml/cover/CoverPage.qml \
-    rpm/Morsender.changes.in \
-    rpm/Morsender.spec \
-    rpm/Morsender.yaml \
     translations/*.ts \
     Morsender.desktop
 
@@ -67,7 +64,8 @@ DISTFILES += \
     qml/pages/BuddyList.qml \
     qml/pages/AccountsList.qml \
     qml/pages/Chat.qml \
-    qml/pages/Settings.qml
+    qml/pages/Settings.qml \
+    qml/pages/Share.qml
 
 RESOURCES += \
     qml/resources/resources.qrc
