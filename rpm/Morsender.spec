@@ -72,5 +72,6 @@ desktop-file-install --delete-original       \
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 /usr/lib/nemo-transferengine/plugins/libMorsenderSharePlugin.so
+/usr/share/dbus-1/services/com.mistermagister.morsender.service
 # >> files
 # << files
