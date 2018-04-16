@@ -66,6 +66,9 @@ desktop-file-install --delete-original       \
   --dir %{buildroot}%{_datadir}/applications             \
    %{buildroot}%{_datadir}/applications/*.desktop
 
+mkdir -p %{buildroot}/usr/lib/systemd/user/post-user-session.target.wants
+ln -s ../Morsender.service %{buildroot}/usr/lib/systemd/user/post-user-session.target.wants/Morsender.service
+
 %files
 %defattr(-,root,root,-)
 %{_bindir}
@@ -74,5 +77,7 @@ desktop-file-install --delete-original       \
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 /usr/lib/nemo-transferengine/plugins/libMorsenderSharePlugin.so
 /usr/share/dbus-1/services/com.mistermagister.morsender.service
+%{_libdir}/systemd/user/*.service
+%{_libdir}/systemd/user/post-user-session.target.wants/*.service
 # >> files
 # << files
