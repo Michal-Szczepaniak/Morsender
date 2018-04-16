@@ -73,4 +73,7 @@ RESOURCES += \
 dbus.files = com.mistermagister.morsender.service
 dbus.path = /usr/share/dbus-1/services/
 
-INSTALLS += dbus
+systemd.files = Morsender.service
+systemd.path = /usr/lib/systemd/user
+
+INSTALLS += dbus systemd

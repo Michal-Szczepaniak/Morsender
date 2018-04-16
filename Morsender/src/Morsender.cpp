@@ -34,6 +34,8 @@
 #include <qqml.h>
 #include <QtQuick/qquickitem.h>
 #include <QtQuick/qquickview.h>
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include "buddymodel.h"
 #include "accountsmodel.h"
 #include "accountsoptionsmodel.h"
@@ -233,7 +235,7 @@ int main(int argc, char *argv[])
 
     init_libpurple();
 
-//    QGuiApplication::setQuitOnLastWindowClosed(false);
+    QGuiApplication::setQuitOnLastWindowClosed(false);
 
     QScopedPointer<QGuiApplication> app(SailfishApp::application(argc, argv));
     QSharedPointer<QQuickView> view(SailfishApp::createView());
@@ -262,7 +264,12 @@ int main(int argc, char *argv[])
     view->rootContext()->setContextProperty("chatModel",&chatModel);
     view->rootContext()->setContextProperty("accountsModel",&accountsModel);
     view->setSource(SailfishApp::pathTo("qml/Morsender.qml"));
-    view->show();
+
+    if(argc < 2) {
+        view->show();
+    } else if(strcmp(argv[1], "--daemon") != 0) {
+        view->show();
+    }
 
     return app->exec();
 }

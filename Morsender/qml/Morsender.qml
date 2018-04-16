@@ -23,6 +23,7 @@ import "pages"
 
 ApplicationWindow
 {
+    id: app
     initialPage: Component { BuddyList { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations

@@ -2,7 +2,7 @@
 Type=Application
 X-Nemo-Application-Type=generic
 Icon=Morsender
-Exec=Morsender
+Exec=dbus-send --type="method_call" --dest=com.mistermagister.morsender / com.mistermagister.morsender.openApp
 Name=Morsender
 # translation example:
 # your app name in German locale (de)

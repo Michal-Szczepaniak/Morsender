@@ -21,6 +21,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Sailfish.Email 1.1
 import Sailfish.TransferEngine 1.0
+import org.nemomobile.dbus 2.0
 
 ShareDialog {
     id: root
@@ -33,6 +34,13 @@ ShareDialog {
                                 && root.content.type === "text/x-url"
     readonly property bool isPlainText: root.content
                                         &&('type' in content) && content.type === "text/plain"
+
+    DBusInterface {
+        id: g_dbusInterface
+        service: "com.mistermagister.morsender"
+        path: "/"
+        iface: "com.mistermagister.morsender"
+    }
 
 //    Component.onCompleted: {
 //        var pathArr = path.split("/")
@@ -59,17 +67,10 @@ ShareDialog {
             "description": description
         }
 
-//        shareItem.userData = {"title": mediaTitle.text,
-//            "description": mediaDesc.text + "," + //"description"
-//            mediaTags.text + "," + //"tags"
-//            (mediaType.currentIndex + 1) + "," + //"mediaType"
-//            (mediaPrivacy.currentIndex == 1 || mediaPrivacy.currentIndex == 3 ? 1 : 0) + "," + //"is_friend"
-//            (mediaPrivacy.currentIndex == 2 || mediaPrivacy.currentIndex == 3 ? 1 : 0) + "," + //"is_family"
-//            (mediaPrivacy.currentIndex == 4 ? 1 : 0) + "," + //"is_public"
-//            (mediaSafety.currentIndex + 1) + "," + //"safety_level"
-//            (mediaPublicReserch.text == "yes" ?  1 : 2) + "," + //"hidden"
-//            xmlListModel.get(albumList.currentIndex - 1).pId}
-//        console.debug("shareItem.userData = " + shareItem.userData);
+        g_dbusInterface.call("share",{
+                                 "title": isLink ? root.content.linkTitle : root.content ? content.name : "Empty",
+                                 "description": description
+                             })
         shareItem.start()
     }
 

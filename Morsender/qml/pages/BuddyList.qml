@@ -24,6 +24,7 @@ import QtGraphicalEffects 1.0
 import org.nemomobile.notifications 1.0
 import com.mistermagister.accounts 1.0
 import org.nemomobile.configuration 1.0
+import org.nemomobile.dbus 2.0
 
 Page {
     id: buddyListPage
@@ -49,6 +50,27 @@ Page {
         property bool pluginIcons: true
         property bool listAvatars: true
         property bool roundListAvatars: false
+    }
+
+    DBusAdaptor {
+        id: shareDBusInterface
+        service: "com.mistermagister.morsender"
+        path: "/"
+        iface: "com.mistermagister.morsender"
+        xml: '<interface name="com.mistermagister.morsender">
+                          <method name="share"> <arg type="s" name="title" direction="in"/> <arg type="s" name="description" direction="in"/> </method>
+                          <method name="openApp"> </method>
+                      </interface>'
+
+        function share(args) {
+            console.log(args.title, args.description);
+        }
+
+        function openApp() {
+            console.log("n0otif");
+            buddyModel.activate();
+            app.activate()
+        }
     }
 
     Connections {
@@ -112,6 +134,10 @@ Page {
         anchors.fill: parent
 
         PullDownMenu {
+            MenuItem {
+                text: qsTr("Quit")
+                onClicked: Qt.quit()
+            }
             MenuItem {
                 text: qsTr("About")
                 onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
@@ -315,8 +341,15 @@ Page {
        previewSummary: "Morsender Account Error"
        previewBody: "Error in account connection"
        expireTimeout: 0
-       onClicked: console.log("Clicked")
-       onClosed: console.log("Closed, reason: " + reason)
+       remoteActions: [ {
+                    "name": "default",
+                    "displayName": "Open App",
+                    "icon": "icon-s-do-it",
+                    "service": "com.mistermagister.morsender",
+                    "path": "/",
+                    "iface": "com.mistermagister.morsender",
+                    "method": "openApp"
+                } ]
     }
 
     Notification {

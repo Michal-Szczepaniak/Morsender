@@ -1,0 +1,10 @@
+[Unit]
+Description=Morsender
+Requires=lipstick.service
+After=lipstick.service
+
+[Service]
+Type=dbus
+ExecStart=/usr/bin/invoker -s --type=generic /usr/bin/Morsender --daemon
+BusName=com.mistermagister.morsender
+Restart=on-failure

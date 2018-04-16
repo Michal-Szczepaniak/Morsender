@@ -74,6 +74,7 @@ signals:
     Q_INVOKABLE void chatSwitched(PurpleBlistNode* node, PurpleAccount* account);
     Q_INVOKABLE void chatSwitched(PurpleConversation* node, PurpleAccount* account);
     Q_INVOKABLE void chatSwitched(QString username, bool type, PurpleAccount* account);
+    Q_INVOKABLE void activate();
 
 public slots:
     void redoBuddyList();
