@@ -69,3 +69,8 @@ DISTFILES += \
 
 RESOURCES += \
     qml/resources/resources.qrc
+
+dbus.files = com.mistermagister.morsender.service
+dbus.path = /usr/share/dbus-1/services/
+
+INSTALLS += dbus

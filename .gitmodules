@@ -1,0 +1,3 @@
+[submodule "Morsender/vendor/fr/grecko/sortfilterproxymodel"]
+	path = Morsender/vendor/fr/grecko/sortfilterproxymodel
+	url = https://github.com/oKcerG/SortFilterProxyModel.git

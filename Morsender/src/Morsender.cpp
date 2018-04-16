@@ -51,6 +51,7 @@
 #include <time.h>
 #include <stdio.h>
 
+
 /**
  * The following eventloop functions are used in both pidgin and purple-text. If your
  * application uses glib mainloop, you can safely use this verbatim.
@@ -253,7 +254,6 @@ int main(int argc, char *argv[])
                      SIGNAL(chatSwitched(QString, bool, PurpleAccount*)),
                      &chatModel,
                      SLOT(switchChat(QString, bool, PurpleAccount*)));
-
 
     qmlRegisterType<AccountsOptionsModel>("com.mistermagister.options", 1, 0, "Options");
     qmlRegisterType<AccountsModel>("com.mistermagister.accounts", 1, 0, "Accounts");

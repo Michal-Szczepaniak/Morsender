@@ -20,6 +20,9 @@
 #include <QDebug>
 #include "MorsenderMediaTransfer.h"
 #include <QStringList>
+#include <QDBusMessage>
+#include <QDBusConnection>
+#include <QDBusInterface>
 
 MorsenderMediaTransfer::MorsenderMediaTransfer(QObject *parent) :
     MediaTransferInterface(parent)
@@ -63,38 +66,13 @@ void MorsenderMediaTransfer::start()
     QString description = mediaItem()->value(MediaItem::Description).toString();
     qDebug() << "description: " << description;
 
-//    if (flickrUploadInterface->connStatus() == FlickrUploadInterface::Logged) {
-//        QString url = mediaItem()->value(MediaItem::Url).toString().replace("file://", "");
-//        QString title = mediaItem()->value(MediaItem::Title).toString();
-//        QStringList descriptions = mediaItem()->value(MediaItem::Description).toString().split(",");
-//        QString photosetId = "no";
-
-//        if (!descriptions.isEmpty()) {
-//            photosetId = descriptions.takeLast();
-//        }
-
-//        descriptions.insert(0, title);
-//        QStringList::const_iterator constIterator;
-//        for (constIterator = descriptions.constBegin(); constIterator != descriptions.constEnd(); ++constIterator) {
-//            qDebug() << " - " << (*constIterator).toLatin1().constData();
-//        }
-
-//        QString mymeType = mediaItem()->value(MediaItem::MimeType).toString();
-//        qDebug() << "mymeType: " << mymeType;
-
-//        QString params = mediaItem()->value(MediaItem::UserData).toString();
-//        qDebug() << "userData: " << params;
-
-//        flickrUploadInterface->send(url, descriptions, photosetId);
-//    }
-//    else {
-//        qDebug() << "Error: flickrUploadInterface->connStatus() == " << flickrUploadInterface->connStatus();
-//    }
-    qDebug() << "hui";
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    QDBusInterface dbus_iface("pl.morsender.share", "/share",
+                              "pl.morsender.share", bus);
+    dbus_iface.call("share", description);
 }
 
 void MorsenderMediaTransfer::uploadMediaStarted() {
-    printf("Eyyy morender 2\n");
     setStatus(MediaTransferInterface::TransferStarted);
 }
 
