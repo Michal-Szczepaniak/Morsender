@@ -19,7 +19,6 @@ Group:      Qt/Qt
 License:    GPL-3.0
 URL:        http://example.org/
 Source0:    %{name}-%{version}.tar.bz2
-Source100:  Morsender.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   libpurple
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.2
