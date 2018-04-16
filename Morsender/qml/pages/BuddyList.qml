@@ -113,6 +113,10 @@ Page {
 
         PullDownMenu {
             MenuItem {
+                text: qsTr("About")
+                onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
+            }
+            MenuItem {
                 text: qsTr("Settings")
                 onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
             }
@@ -123,7 +127,7 @@ Page {
             }
 
             MenuItem {
-                text: qsTr("New...")
+                text: qsTr("New…")
                 onClicked: pageStack.push(Qt.resolvedUrl("NewChat.qml"))
             }
         }

@@ -9,6 +9,13 @@
     </message>
 </context>
 <context>
+    <name>About</name>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AccountsList</name>
     <message>
         <source>Add account</source>
@@ -34,7 +41,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>New...</source>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New…</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
