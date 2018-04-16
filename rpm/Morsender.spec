@@ -29,6 +29,7 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  libpurple-devel
 BuildRequires:  nemo-qml-plugin-notifications-qt5-devel
 BuildRequires:  qt5-qtdbus-devel
+BuildRequires:  libnemotransferengine-qt5-devel
 BuildRequires:  desktop-file-utils
 
 %description

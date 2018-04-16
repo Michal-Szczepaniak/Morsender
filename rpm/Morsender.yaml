@@ -33,6 +33,7 @@ PkgBR:
   - libpurple-devel
   - nemo-qml-plugin-notifications-qt5-devel
   - qt5-qtdbus-devel
+  - libnemotransferengine-qt5-devel
 
 # Runtime dependencies which are not automatically detected
 Requires:
