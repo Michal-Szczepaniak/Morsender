@@ -77,23 +77,23 @@ Item {
     Connections {
         target: accountsModel
         onErrorAdded: {
-            errorPanel.visible = true
-            errorLabel.text = message
+//            errorPanel.visible = true
+//            errorLabel.text = message
             accountLabel.text = account
             notification.body = message
             if(settings.errorNotifications && !mutedNotifications)
                 notification.publish()
         }
         onErrorUpdated: {
-            errorLabel.text = message
+//            errorLabel.text = message
             notification.body = message
             if(settings.errorNotifications && !mutedNotifications)
                 notification.publish()
         }
 
         onErrorRemoved: {
-            errorPanel.visible = false
-            errorLabel.text = ""
+//            errorPanel.visible = false
+//            errorLabel.text = ""
         }
     }
 
@@ -102,7 +102,7 @@ Item {
         onCurrentItemChanged: {
             if(swipeView.currentItem == buddyListPage) {
                 var name = chatModel.chatName
-                console.log(chatModel.chatName)
+//                console.log(chatModel.chatName)
                 chatModel.chatName = ""
             }
         }
@@ -337,52 +337,5 @@ Item {
        expireTimeout: 0
        onClicked: console.log("Clicked")
        onClosed: console.log("Closed, reason: " + reason)
-    }
-
-    Rectangle {
-        id: errorPanel
-
-        color: Theme.rgba(Theme.highlightBackgroundColor, Theme.highlightBackgroundOpacity)
-        visible: false
-        width: parent.width
-        height: Theme.paddingLarge*10
-        anchors.bottom: parent.bottom
-
-        Column {
-            id: errorColumn
-            anchors.fill: parent
-            anchors.topMargin: Theme.paddingLarge
-            spacing: Theme.paddingLarge
-
-            Label {
-                id: accountLabel
-                text: ""
-                horizontalAlignment: Text.AlignHCenter
-                width: parent.width
-            }
-
-            Label {
-                id: errorLabel
-                text: ""
-                horizontalAlignment: Text.AlignHCenter
-                width: parent.width
-            }
-
-            Row {
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: Theme.paddingSmall
-                Button {
-                    text: "Modify Account"
-                    onClicked: {
-                        accountsModel.modifyAccount();
-                        pageStack.push(Qt.resolvedUrl("AccountsList.qml"))
-                    }
-                }
-                Button {
-                    text: "Reconnect"
-                    onClicked: accountsModel.reconnectAccount()
-                }
-            }
-        }
     }
 }
