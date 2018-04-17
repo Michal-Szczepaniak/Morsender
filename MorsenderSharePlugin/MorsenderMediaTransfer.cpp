@@ -27,10 +27,6 @@
 MorsenderMediaTransfer::MorsenderMediaTransfer(QObject *parent) :
     MediaTransferInterface(parent)
 {
-//    flickrUploadInterface = new FlickrUploadInterface(this);
-//    connect(flickrUploadInterface, SIGNAL(uploadMediaStarted()), this, SLOT(uploadMediaStarted()));
-//    connect(flickrUploadInterface, SIGNAL(uploadMediaProgress(qint64,qint64)), this, SLOT(uploadMediaProgress(qint64,qint64)));
-//    connect(flickrUploadInterface, SIGNAL(uploadMediaFinished(bool)), this,SLOT(uploadMediaFinished(bool)));
 }
 
 MorsenderMediaTransfer::~MorsenderMediaTransfer()
