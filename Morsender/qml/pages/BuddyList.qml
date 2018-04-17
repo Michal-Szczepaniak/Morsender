@@ -26,12 +26,11 @@ import com.mistermagister.accounts 1.0
 import org.nemomobile.configuration 1.0
 import org.nemomobile.dbus 2.0
 
-Page {
+Item {
     id: buddyListPage
     property bool searching: false
 
-    // The effective value will be restricted by ApplicationWindow.allowedOrientations
-    allowedOrientations: Orientation.All
+    implicitHeight: swipeView.height; implicitWidth: swipeView.width
 
     ConfigurationGroup {
         id: settings
@@ -50,27 +49,6 @@ Page {
         property bool pluginIcons: true
         property bool listAvatars: true
         property bool roundListAvatars: false
-    }
-
-    DBusAdaptor {
-        id: shareDBusInterface
-        service: "com.mistermagister.morsender"
-        path: "/"
-        iface: "com.mistermagister.morsender"
-        xml: '<interface name="com.mistermagister.morsender">
-                          <method name="share"> <arg type="s" name="title" direction="in"/> <arg type="s" name="description" direction="in"/> </method>
-                          <method name="openApp"> </method>
-                      </interface>'
-
-        function share(args) {
-            console.log(args.title, args.description);
-        }
-
-        function openApp() {
-            console.log("n0otif");
-            buddyModel.activate();
-            app.activate()
-        }
     }
 
     Connections {
@@ -92,17 +70,6 @@ Page {
                     if(username !== chatModel.chatName)
                         messageNotification.publish();
                 }
-            }
-        }
-    }
-
-    Connections {
-        target: buddyListPage
-        onStatusChanged: {
-            if(buddyListPage.status == PageStatus.Active) {
-                var name = chatModel.chatName
-//                console.log(chatModel.chatName)
-                chatModel.chatName = ""
             }
         }
     }
@@ -130,26 +97,28 @@ Page {
         }
     }
 
+    Connections {
+        target: swipeView
+        onCurrentItemChanged: {
+            if(swipeView.currentItem == buddyListPage) {
+                var name = chatModel.chatName
+                console.log(chatModel.chatName)
+                chatModel.chatName = ""
+            }
+        }
+    }
+
     SilicaFlickable {
+        id: userFlickable
         anchors.fill: parent
+        flickableDirection: Flickable.VerticalFlick
+//        contentHeight: userColumn.height
+
 
         PullDownMenu {
             MenuItem {
                 text: qsTr("Quit")
                 onClicked: Qt.quit()
-            }
-            MenuItem {
-                text: qsTr("About")
-                onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
-            }
-            MenuItem {
-                text: qsTr("Settings")
-                onClicked: pageStack.push(Qt.resolvedUrl("Settings.qml"))
-            }
-
-            MenuItem {
-                text: qsTr("Accounts")
-                onClicked: pageStack.push(Qt.resolvedUrl("AccountsList.qml"))
             }
 
             MenuItem {
@@ -162,9 +131,6 @@ Page {
             id: search
             title: qsTr("Buddy list")
         }
-
-        // Tell SilicaFlickable the height of its content.
-        contentHeight: parent.height
 
         SilicaListView {
             id: buddyList
@@ -182,6 +148,8 @@ Page {
             }
             delegate: ListItem {
                 id: delegate
+
+                width: buddyList.width
 
                 menu: contextMenuComponent
 
@@ -283,14 +251,20 @@ Page {
                 }
 
                 onClicked: {
+                    chatPage.userName = name;
+                    chatPage.type = type;
+                    chatPage.name = convName;
+                    chatPage.pluginName = pluginName;
                     buddyModel.chatSwitched(node, account);
-                    pageStack.push(Qt.resolvedUrl("Chat.qml"), {
-                                       userName: name,
-                                       type: type,
-                                       name: convName,
-                                       node: node,
-                                       pluginName: pluginName
-                                   })
+
+                    swipeView.currentIndex = 1
+//                    pageStack.push(Qt.resolvedUrl("Chat.qml"), {
+//                                       userName: name,
+//                                       type: type,
+//                                       name: convName,
+//                                       node: node,
+//                                       pluginName: pluginName
+//                                   })
                 }
             }
             VerticalScrollDecorator {}

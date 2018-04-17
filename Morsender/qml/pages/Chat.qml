@@ -25,12 +25,14 @@ import org.nemomobile.notifications 1.0
 import org.nemomobile.configuration 1.0
 import Sailfish.Pickers 1.0
 
-Page {
+Item {
     id: chatPage
     property string userName: ""
     property string name: ""
     property string pluginName: ""
     property int type: 0
+
+    implicitHeight: swipeView.height; implicitWidth: swipeView.width
 
     function addZero(i) {
         if (i < 10) {
@@ -87,15 +89,14 @@ Page {
         }
     }
 
-    Connections {
-        target: chatPage
-        onStatusChanged: {
-            if(chatPage.status == PageStatus.Active && type == 3) {
-                pageStack.pushAttached(users)
-            }
-        }
-    }
-
+//    Connections {
+//        target: chatPage
+//        onStatusChanged: {
+//            if(chatPage.status == PageStatus.Active && type == 3) {
+//                pageStack.pushAttached(users)
+//            }
+//        }
+//    }
 
     SilicaFlickable {
         anchors.fill: parent

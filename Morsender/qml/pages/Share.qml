@@ -96,9 +96,10 @@ ShareDialog {
                 text: "Target chat choose window will open after accepting."
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             }
-    }
+        }
 
-    TempFileWriter {
-        id: tempWriter
+        TempFileWriter {
+            id: tempWriter
+        }
     }
 }

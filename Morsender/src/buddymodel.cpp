@@ -24,7 +24,7 @@ BuddyModel::BuddyModel(ChatModel* chatModel)
 {
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(redoBuddyList()));
-    timer->start(1000);
+    timer->start(5000);
 
     this->chatModel = chatModel;
 
@@ -45,6 +45,7 @@ void BuddyModel::redoBuddyList()
     PurpleBuddyList* list = purple_get_blist();
     node = list->root;
 
+    // Add new nodes dont add if account is disabled
     while (node)
     {
         /* This is only needed when we're reverting to a non-GTK+ sorted
@@ -58,6 +59,8 @@ void BuddyModel::redoBuddyList()
         node = purple_blist_node_next(node, FALSE);
 
     }
+
+    // Here remove all buddies that dont exist anymore
 
     updateBlistNode();
 }

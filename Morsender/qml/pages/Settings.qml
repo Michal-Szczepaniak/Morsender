@@ -21,11 +21,10 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import org.nemomobile.configuration 1.0
 
-Page {
-    id: page
+Item {
+    id: settingsPage
 
-    // The effective value will be restricted by ApplicationWindow.allowedOrientations
-    allowedOrientations: Orientation.All
+    implicitHeight: swipeView.height; implicitWidth: swipeView.width
 
     ConfigurationGroup {
         id: settings
@@ -48,8 +47,20 @@ Page {
 
     SilicaFlickable {
         anchors.fill: parent
-
+        flickableDirection: Flickable.VerticalFlick
         contentHeight: parent.height
+
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("About")
+                onClicked: pageStack.push(Qt.resolvedUrl("About.qml"))
+            }
+
+            MenuItem {
+                text: qsTr("Accounts")
+                onClicked: pageStack.push(Qt.resolvedUrl("AccountsList.qml"))
+            }
+        }
 
         PageHeader {
             id: header
