@@ -13,7 +13,7 @@ Name:       Morsender
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Morsender is multiprotocol messenger for sailfishos based on libpurple.
-Version:    0.3.5
+Version:    0.4.0
 Release:    1
 Group:      Qt/Qt
 License:    GPL-3.0
