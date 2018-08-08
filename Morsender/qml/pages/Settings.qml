@@ -48,7 +48,7 @@ Item {
     SilicaFlickable {
         anchors.fill: parent
         flickableDirection: Flickable.VerticalFlick
-        contentHeight: parent.height
+        contentHeight: column.height + header.height
 
         PullDownMenu {
             MenuItem {
@@ -68,6 +68,7 @@ Item {
         }
 
         Column {
+            id: column
             spacing: Theme.paddingLarge
             anchors.topMargin: header.height
             anchors.fill: parent

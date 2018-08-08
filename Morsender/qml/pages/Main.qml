@@ -23,7 +23,7 @@ import org.nemomobile.dbus 2.0
 import "../components"
 
 Page {
-    id: testPage
+    id: mainPage
 
     // The effective value will be restricted by ApplicationWindow.allowedOrientations
     allowedOrientations: Orientation.All

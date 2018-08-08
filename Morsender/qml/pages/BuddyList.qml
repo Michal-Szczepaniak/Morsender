@@ -128,7 +128,7 @@ Item {
         }
 
         PageHeader {
-            id: search
+            id: header
             title: qsTr("Buddy list")
         }
 
@@ -136,7 +136,7 @@ Item {
             id: buddyList
             model: buddyProxyModel
             currentIndex: -1
-            anchors.top: search.bottom
+            anchors.top: header.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -251,12 +251,14 @@ Item {
                 }
 
                 onClicked: {
+                    buddyModel.chatSwitched(node, account);
+
                     chatPage.userName = name;
                     chatPage.type = type;
                     chatPage.name = convName;
                     chatPage.pluginName = pluginName;
-                    buddyModel.chatSwitched(node, account);
 
+                    chatPage.chat.positionViewAtBeginning()
                     swipeView.currentIndex = 1
 //                    pageStack.push(Qt.resolvedUrl("Chat.qml"), {
 //                                       userName: name,

@@ -29,7 +29,7 @@ class AccountsModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(QString message READ getMessage NOTIFY messageChanged)
-    Q_PROPERTY(PurpleAccount* account READ getAccount NOTIFY accountChanged)
+    Q_PROPERTY(PurpleAccount* account READ getAccount NOTIFY accountStatusChanged)
 public:
     AccountsModel();
     QString getMessage();
@@ -57,17 +57,18 @@ public:
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
 
 signals:
+    void accountOptionsAdded();
     void messageChanged(QString message);
-    void accountChanged(PurpleAccount* account);
+    void accountStatusChanged(PurpleAccount* account);
     void errorAdded(QString message, QString account);
     void errorUpdated(QString message, QString account);
     void errorRemoved(QString message, QString account);
-    void accountStatusChangedSignal(PurpleAccount *account, void *data);
+    void accountStatusChanged(PurpleAccount *account, void *data);
 
 public slots:
     Q_INVOKABLE void reconnectAccount();
     Q_INVOKABLE void modifyAccount();
-    void accountStatusChanged(PurpleAccount *account, void *data);
+    void accountOptionsChanged(PurpleAccount *account);
     void accountErrorChanged(PurpleAccount *account, const PurpleConnectionErrorInfo *infoOld, const PurpleConnectionErrorInfo *infoNew, void *data);
 
 protected:

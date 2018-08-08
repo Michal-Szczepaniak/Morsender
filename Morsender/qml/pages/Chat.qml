@@ -31,6 +31,7 @@ Item {
     property string name: ""
     property string pluginName: ""
     property int type: 0
+    property var chat: chat
 
     implicitHeight: swipeView.height; implicitWidth: swipeView.width
 
@@ -77,12 +78,17 @@ Item {
 
                     onClicked: {
                         buddyModel.chatSwitched(modelData[1], false, chatModel.getActiveConvAccount());
-                        pageStack.replace(Qt.resolvedUrl("Chat.qml"), {
-                                           userName: modelData[0],
-                                           type: 2,
-                                           name: modelData[1],
-                                           pluginName: pluginName
-                                       })
+                        chatPage.userName = modelData[0];
+                        chatPage.type = 2;
+                        chatPage.name = modelData[1];
+                        chatPage.pluginName = pluginName;
+                        pageStack.pop();
+//                        pageStack.replace(Qt.resolvedUrl("Chat.qml"), {
+//                                           userName: modelData[0],
+//                                           type: 2,
+//                                           name: modelData[1],
+//                                           pluginName: pluginName
+//                                       })
                     }
                 }
             }
@@ -135,6 +141,7 @@ Item {
                         height: Theme.paddingLarge*2
                         anchors.left: parent.left
                         visible: cleanAvatars.value && recived && type == 2 ? true : false
+                        asynchronous: true
                         fillMode: Image.PreserveAspectCrop
                         layer.enabled: true
                         layer.effect: OpacityMask {
@@ -147,8 +154,8 @@ Item {
                         width: Theme.paddingLarge*2
                         height: Theme.paddingLarge*2
                         radius: 50
-                        visible: cleanAvatars.value && !recived && type == 2
-                        color: Theme.highlightColor
+                        visible: cleanAvatars.value && !avatar && type == 2
+                        color: recived ? "white" : Theme.highlightColor
                     }
 
                     Column {
@@ -363,6 +370,12 @@ Item {
                 text: "Send file"
                 enabled: chatModel.fileSendingEnabled
                 onClicked: pageStack.push(contentPickerPage)
+            }
+
+            MenuItem {
+                text: "Users List"
+                enabled: type == 3
+                onClicked: pageStack.push(users)
             }
         }
     }

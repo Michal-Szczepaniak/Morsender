@@ -19,22 +19,24 @@
 
 #include "accountsmodel.h"
 #include <purple.h>
+#include <QDebug>
 #include "chatmodel.h"
 
 AccountsModel::AccountsModel()
 {
     GList* accounts = purple_accounts_get_all();
     for (; accounts != NULL; accounts = accounts->next) {
-        AccountsOptionsModel *option = new AccountsOptionsModel();
         PurpleAccount* account = (PurpleAccount*)accounts->data;
-        option->addOptions(account);
+        int protocolID = NULL;
 
         GList *iter = purple_plugins_get_loaded();
         for (int i = 0; iter; iter = iter->next, i++) {
-//            PurplePlugin* plugin = (PurplePlugin*)iter->data;
-            if(strcmp(purple_plugin_get_id((PurplePlugin*)iter->data), purple_account_get_protocol_id((PurpleAccount*)accounts->data)) == 0)
-                option->protocolID = i;
+            if(strcmp(purple_plugin_get_id((PurplePlugin*)iter->data), purple_account_get_protocol_id(account)) == 0)
+                protocolID = i;
         }
+
+        AccountsOptionsModel *option = new AccountsOptionsModel(protocolID);
+        option->addOptions(account);
 
         addAccount(option, FALSE);
     }
@@ -59,9 +61,18 @@ AccountsModel::AccountsModel()
                           PURPLE_CALLBACK(
                               AccountsModel::accountStatusChangedCb),
                           this);
-
-    connect(this, SIGNAL(accountStatusChangedSignal(PurpleAccount*,void*)),
-            this, SLOT(accountStatusChanged(PurpleAccount*,void*)));
+//    purple_signal_connect(account_handle,
+//                          "signed-on",
+//                          &handle,
+//                          PURPLE_CALLBACK(
+//                              AccountsModel::accountStatusChangedCb),
+//                          this);
+//    purple_signal_connect(account_handle,
+//                          "signed-off",
+//                          &handle,
+//                          PURPLE_CALLBACK(
+//                              AccountsModel::accountStatusChangedCb),
+//                          this)
 }
 
 AccountsOptionsModel* AccountsModel::newAccount(int index) {
@@ -77,9 +88,8 @@ AccountsOptionsModel* AccountsModel::newAccount(int index) {
     }
 
     if(i == index) {
-        AccountsOptionsModel *option = new AccountsOptionsModel();
+        AccountsOptionsModel *option = new AccountsOptionsModel(index);
         option->addOptions(account, true);
-        option->protocolID = index;
         return option;
     } else {
         return NULL;
@@ -99,6 +109,15 @@ void AccountsModel::addAccount(AccountsOptionsModel *account, int newAccount)
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
     m_options << account;
     endInsertRows();
+
+    connect(account, SIGNAL(accountOptionsChanged(PurpleAccount*)),
+            this, SLOT(accountOptionsChanged(PurpleAccount*)));
+    connect(this, SIGNAL(accountStatusChanged(PurpleAccount*,void*)),
+            account, SLOT(accountStatusChanged(PurpleAccount*,void*)));
+    connect(this, SIGNAL(accountOptionsAdded()),
+            account, SLOT(accountsOptionsAdded()));
+
+    emit this->accountOptionsAdded();
 
     if(newAccount) {
         purple_accounts_add(account->account);
@@ -127,15 +146,16 @@ QVariant AccountsModel::data(const QModelIndex & index, int role) const {
     if (index.row() < 0 || index.row() >= m_options.count())
         return QVariant();
 
+
     AccountsOptionsModel *account = m_options[index.row()];
     if (role == Enabled)
-        return account->enabled;
+        return account->getEnabled();
     else if (role == Username)
-        return account->username;
+        return account->getUsername();
     else if (role == Protocol)
-        return account->protocol;
+        return account->getProtocol();
     else if (role == ProtocolID)
-        return account->protocolID;
+        return account->getProtocolID();
     else if (role == Options)
         return QVariant::fromValue(account);
     else if (role == Account)
@@ -157,7 +177,6 @@ QHash<int, QByteArray> AccountsModel::roleNames() const {
 void AccountsModel::accountErrorChanged(PurpleAccount *account, const PurpleConnectionErrorInfo *infoOld, const PurpleConnectionErrorInfo *infoNew, void *data) {
     gboolean descriptions_differ;
     const char *desc;
-
     if (infoOld == NULL && infoNew == NULL)
         return;
 
@@ -188,7 +207,7 @@ void AccountsModel::accountErrorChanged(PurpleAccount *account, const PurpleConn
             && descriptions_differ) {
 //            update_signed_on_elsewhere_tooltip(account, desc);
         } else {
-            removeError(account);
+//            removeError(account);
 //            add_to_signed_on_elsewhere(account);
         }
         break;
@@ -209,7 +228,7 @@ void AccountsModel::addError(PurpleAccount *account, const PurpleConnectionError
     this->message = QString::fromUtf8(err->description);
     this->account = account;
     emit messageChanged(message);
-    emit accountChanged(account);
+    emit accountStatusChanged(account);
     QString accountName = QString::fromUtf8(
                 purple_account_get_protocol_name(account)) + ": " +
                 QString::fromUtf8(purple_account_get_username(account));
@@ -222,7 +241,7 @@ void AccountsModel::updateError(PurpleAccount *account, const PurpleConnectionEr
     this->message = QString::fromUtf8(err->description);
     this->account = account;
     emit messageChanged(message);
-    emit accountChanged(account);
+    emit accountStatusChanged(account);
     QString accountName = QString::fromUtf8(
                 purple_account_get_protocol_name(account)) + ": " +
                 QString::fromUtf8(purple_account_get_username(account));
@@ -233,7 +252,7 @@ void AccountsModel::removeError(PurpleAccount *account) {
     this->message = "";
     this->account = NULL;
     emit messageChanged(message);
-    emit accountChanged(account);
+    emit accountStatusChanged(account);
     QString accountName = QString::fromUtf8(
                 purple_account_get_protocol_name(account)) + ": " +
                 QString::fromUtf8(purple_account_get_username(account));
@@ -249,6 +268,11 @@ void AccountsModel::reconnectAccount() {
         purple_account_clear_current_error(this->account);
         purple_account_set_enabled(this->account, purple_core_get_ui(), TRUE);
     }
+}
+
+void AccountsModel::accountOptionsChanged(PurpleAccount *account) {
+//    beginResetModel();
+//    endResetModel();
 }
 
 void AccountsModel::modifyAccount() {
@@ -274,23 +298,7 @@ void AccountsModel::accountErrorChangedCb(PurpleAccount *account,
 void AccountsModel::accountStatusChangedCb(PurpleAccount *account,
                                           void *data) {
     AccountsModel* accountsModel = (AccountsModel*)data;
-    emit accountsModel->accountStatusChangedSignal(account, data);
-}
-
-void AccountsModel::accountStatusChanged(PurpleAccount *account, void *data) {
-    AccountsOptionsModel* foundOption = NULL;
-    for(AccountsOptionsModel* option: m_options) {
-        if(account == option->account) {
-            foundOption = option;
-            break;
-        }
-    }
-
-    if(foundOption) {
-        emit foundOption->dataChanged(index(0,0),index(
-                                     foundOption->rowCount(),
-                                     foundOption->rowCount()));
-    }
+    emit accountsModel->accountStatusChanged(account, data);
 }
 
 void* AccountsModel::getAccountHandle(void) {

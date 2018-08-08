@@ -285,7 +285,7 @@ void ChatModel::switchChat(PurpleBlistNode* node, PurpleAccount* account) {
         }
     }
     endResetModel();
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    beginInsertRows(QModelIndex(), 0, rowCount());
     endInsertRows();
 }
 

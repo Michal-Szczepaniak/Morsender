@@ -26,8 +26,13 @@
 class AccountsOptionsModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int status READ getStatus NOTIFY statusChanged)
+    Q_PROPERTY(bool enabled READ getEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(QString username READ getUsername NOTIFY usernameChanged)
+    Q_PROPERTY(QString prtocol READ getProtocol NOTIFY protocolChanged)
+    Q_PROPERTY(int protocolID READ getProtocolID NOTIFY protocolIDChanged)
 public:
-    AccountsOptionsModel();
+    AccountsOptionsModel(int protocolID = NULL);
 
     enum OptionRoles {
         Name = Qt::UserRole + 1,
@@ -52,14 +57,8 @@ public:
        bool disabled = false;
     };
 
-    QString username;
-    QString protocol;
-    int     protocolID = 0;
-    bool    enabled;
-
     void addOption(const Option &option);
     void addOptions(PurpleAccount* account, bool newAccount = false);
-    Q_INVOKABLE bool getEnabled();
 
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
@@ -70,13 +69,37 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
     PurpleAccount* account;
+
+    /* Getters */
+    int getStatus();
+    bool getEnabled();
+    QString getUsername();
+    QString getProtocol();
+    int getProtocolID();
+
+signals:
+    void accountOptionsChanged(PurpleAccount* account);
+    void statusChanged();
+    void enabledChanged();
+    void usernameChanged();
+    void protocolChanged();
+    void protocolIDChanged();
+
+public slots:
+    void accountsOptionsAdded();
+    void accountStatusChanged(PurpleAccount *account, void *data);
+
 protected:
     QHash<int, QByteArray> roleNames() const;
 
 private:
-    QList<Option> m_options;
-    void sendModifiedSignal();
-    void* getAccountHandle(void);
+    QList<Option>   m_options;
+    void*   getAccountHandle(void);
+    int     m_status = 0;
+    bool    m_enabled = 0;
+    QString m_username = "";
+    QString m_protocol = "";
+    int     m_protocolID = 0;
 };
 
 Q_DECLARE_METATYPE(AccountsOptionsModel*)

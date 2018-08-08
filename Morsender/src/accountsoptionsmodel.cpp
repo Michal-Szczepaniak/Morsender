@@ -19,11 +19,11 @@
 
 #include "accountsoptionsmodel.h"
 #include "defines.h"
-#include <iostream>
+#include <QDebug>
 
-AccountsOptionsModel::AccountsOptionsModel()
+AccountsOptionsModel::AccountsOptionsModel(int protocolID)
 {
-
+    this->m_protocolID = protocolID;
 }
 
 void AccountsOptionsModel::addOption(const Option &option)
@@ -35,11 +35,9 @@ void AccountsOptionsModel::addOption(const Option &option)
 
 void AccountsOptionsModel::addOptions(PurpleAccount* account, bool newAccount) {
         this->account = account;
-        username = QString::fromStdString(std::string(purple_account_get_username(account)));
-        protocol = QString::fromStdString(std::string(purple_account_get_protocol_id(account)));
-        enabled = purple_account_get_enabled(account, UI_ID);
-//        if(enabled)
-//            purple_account_set_enabled(account, UI_ID, true);
+        m_username = QString::fromStdString(std::string(purple_account_get_username(account)));
+        m_protocol = QString::fromStdString(std::string(purple_account_get_protocol_id(account)));
+        m_enabled = purple_account_get_enabled(account, UI_ID);
 
         GList *iter;
         iter = purple_plugins_get_loaded();
@@ -55,7 +53,7 @@ void AccountsOptionsModel::addOptions(PurpleAccount* account, bool newAccount) {
             Option accountOption;
             accountOption.name = "Enabled";
             accountOption.defaultValue = "0";
-            accountOption.value = enabled ? "1" : "0";
+            accountOption.value = m_enabled ? "1" : "0";
             accountOption.type = "bool";
             accountOption.setting = "enable";
             if(newAccount)
@@ -63,10 +61,9 @@ void AccountsOptionsModel::addOptions(PurpleAccount* account, bool newAccount) {
             Option usernameOption;
             usernameOption.name = "Username";
             usernameOption.defaultValue = "sailor";
-            usernameOption.value = QString::fromUtf8(purple_account_get_username(account));
             usernameOption.type = "string";
             usernameOption.setting = "username";
-            usernameOption.disabled = enabled;
+            usernameOption.disabled = m_enabled;
             Option passwordOption;
             passwordOption.name = "Password";
             passwordOption.defaultValue = "";
@@ -117,8 +114,8 @@ void AccountsOptionsModel::addOptions(PurpleAccount* account, bool newAccount) {
                     splits.push_back(splitOption);
 
             }
-            usernameOption.value = username;
 
+            usernameOption.value = username;
 
             addOption(accountOption);
             addOption(usernameOption);
@@ -188,10 +185,6 @@ void AccountsOptionsModel::addOptions(PurpleAccount* account, bool newAccount) {
         }
 }
 
-bool AccountsOptionsModel::getEnabled() {
-    return purple_account_get_enabled(account, UI_ID);
-}
-
 int AccountsOptionsModel::rowCount(const QModelIndex & parent) const {
     Q_UNUSED(parent);
     return m_options.count();
@@ -226,11 +219,13 @@ bool AccountsOptionsModel::setData(const QModelIndex &index, const QVariant &val
         if (role == Value || role == Index) {
             if (option.setting == "enable") {
                 purple_account_set_enabled(this->account, UI_ID, value.toBool());
-                enabled = value.toBool();
+                m_enabled = value.toBool();
+                m_options[index.row()+1].disabled = m_enabled;
+                emit dataChanged(this->index(index.row()+1, index.column()), this->index(index.row()+1, index.column()));
             } else if (option.setting == "username") {
-                username.replace(option.value, value.toString());
+                m_username.replace(option.value, value.toString());
                 option.value = value.toString();
-                purple_account_set_username(account, username.toStdString().c_str());
+                purple_account_set_username(account, m_username.toStdString().c_str());
             } else if (option.setting == "password")
                 purple_account_set_password(this->account, value.toString().toStdString().c_str());
             else if (option.setting == "rememberPassword")
@@ -246,7 +241,7 @@ bool AccountsOptionsModel::setData(const QModelIndex &index, const QVariant &val
             }
             option.value = value.toString();
             emit dataChanged(index, index);
-            sendModifiedSignal();
+            emit accountOptionsChanged(account);
         }
         return true;
     }
@@ -270,12 +265,44 @@ QHash<int, QByteArray> AccountsOptionsModel::roleNames() const {
     return roles;
 }
 
-void AccountsOptionsModel::sendModifiedSignal() {
-    purple_signal_emit(getAccountHandle(), "account-modified", this->account);
-}
-
 void* AccountsOptionsModel::getAccountHandle(void) {
     static int handle;
 
     return &handle;
+}
+
+void AccountsOptionsModel::accountStatusChanged(PurpleAccount *account, void *data) {
+    if(!account || account != this->account) return;
+
+    this->m_enabled = purple_account_get_enabled(account, UI_ID);
+    emit enabledChanged();
+}
+
+/* Getters */
+int AccountsOptionsModel::getStatus() {
+    return m_status;
+}
+
+bool AccountsOptionsModel::getEnabled() {
+    return m_enabled;
+}
+
+QString AccountsOptionsModel::getUsername() {
+    return m_username;
+}
+
+QString AccountsOptionsModel::getProtocol() {
+    return m_protocol;
+}
+
+int AccountsOptionsModel::getProtocolID() {
+    return m_protocolID;
+}
+
+void AccountsOptionsModel::accountsOptionsAdded() {
+    if(!m_options.size()) return;
+
+    beginResetModel();
+    m_options[0].disabled = false;
+    endResetModel();
 }

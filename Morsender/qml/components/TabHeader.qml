@@ -28,7 +28,7 @@ Item {
     property int visibleHeight: flickable.contentY + height
 
     anchors { bottom: parent.bottom; left: parent.left; right: parent.right }
-    height: Theme.itemSizeMedium
+    height: mainPage.isPortrait ? Theme.itemSizeSmall: 0
 
     SilicaFlickable {
         id: flickable
@@ -42,7 +42,7 @@ Item {
                 id: sectionRepeater
                 model: iconArray
                 delegate: BackgroundItem {
-
+                    visible: mainPage.isPortrait
                     width: tabPageHeader.width / sectionRepeater.count
                     height: tabPageHeader.height
 
@@ -103,7 +103,7 @@ Item {
 
         Rectangle {
             id: currentSectionIndicator
-            anchors.top: parent.top
+            anchors.bottom: parent.top
             color: Theme.highlightColor
             height: Theme.paddingSmall
             width: tabPageHeader.width / sectionRepeater.count

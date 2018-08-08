@@ -117,7 +117,7 @@ Page {
             width: page.width
             label: "Account Type"
             anchors.top: header.bottom
-            enabled: !accountPage.option.getEnabled()
+            enabled: !accountPage.option.enabled
             menu: ContextMenu {
                 Repeater {
                     model: accountsModel.getPluginList();

@@ -19,6 +19,12 @@ CONFIG += link_pkgconfig sailfishapp
 #QMAKE_CXXFLAGS += -std=gnu99
 #QMAKE_LFLAGS += -std=gnu99
 
+QMAKE_CXXFLAGS_DEBUG -= -O2
+QMAKE_CXXFLAGS_DEBUG += -O0
+
+QMAKE_CFLAGS_DEBUG -= -O2
+QMAKE_CFLAGS_DEBUG += -O0
+
 PKGCONFIG += glib-2.0 nemonotifications-qt5
 
 INCLUDEPATH += /usr/include/libpurple/ \
